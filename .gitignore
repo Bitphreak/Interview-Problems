@@ -1,6 +1,8 @@
 #ignores for swap files
 *.swp
 *.kate-swp
+ignore/
+
 
 #Ignores for Java
 *.class
