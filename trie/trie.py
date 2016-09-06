@@ -10,18 +10,59 @@ class TrieNode(dict) :
         self.nodes = {}
 
     def insert_word(self, word) :
-        self.insert_prefix(word, 0)
+        self.insert_prefix(word.lower(), 0)
         
     def insert_prefix(self, word, index) :
         end_index = len(word) - 1
         if index <= end_index :
             char = word[index]
-            if not char in current :
-                self[char] = Node()
-            current = current[char]
+            if not char in self :
+                self[char] = TrieNode()
 
-            if i == end_index :
-                current.word = word
+            if index == end_index :
+                self[char].word = word
+            else :
+                self[char].insert_prefix(word, index + 1)
+
+    def suggest(self, prefix, count) :
+        if prefix == None or len(prefix) == 0 :
+            return None
+
+        key = prefix[0:1].lower()
+        if key in self :
+            if len(prefix) > 1 :
+                return self[key].suggest(prefix[1:], count)
+            else :
+                suggestions = []
+                for key in self.keys() :
+                    node = self[key]
+                    suggestions.extend(node.get_all()[:count])
+                    if len(suggestions) == count :
+                        break
+                return suggestions
+        return None
+
+    def get_all(self) :
+        words = []
+        if self.word is not None :
+            words.append(self.word)
+
+        for key in self.keys() :
+            words.extend(self[key].get_all())
+
+        return words
+
+    def has_prefix(self, prefix) :
+        if prefix == None or len(prefix) == 0 :
+            return False
+
+        key = prefix[0:1].lower()
+        if key in self :
+            if len(prefix) > 1 :
+                return self[key].has_prefix(prefix[1:])
+            else :
+                return True
+        return False
 
     #def __iter__(self):
     #def __next__(self):
@@ -81,11 +122,12 @@ if __name__ == '__main__':
     trie = TrieNode()
 
     for i, word in enumerate(words) :
-        trie[word] = word
+        print "inserting: ", word
+        trie.insert_word(word)
         if i == 9 :
             break
 
     print trie
 
-    # trie = Trie(words)
+    print trie.suggest("aard", 10)
 
