@@ -1,5 +1,5 @@
 
-class Trei(object) :
+class Trie(object) :
 
     head = {}
 
@@ -23,5 +23,5 @@ if __name__ == '__main__':
     with open('/usr/share/dict/words') as f :
         words = f.read().splitlines()
 
-    trei = Trei(words)
+    trie = Trie(words)
 
